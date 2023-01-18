@@ -1,22 +1,22 @@
 
-#include <stdio.h>
+#include <fcntl.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
 
-static void show_line(const uint8_t *data, size_t len)
+static void show_line(const uint8_t* data, size_t len)
 {
     size_t i;
-    for (i = 0; i < len; i ++) {
+    for (i = 0; i < len; i++) {
         printf(" %02X", data[i]);
     }
-    for (; i < 16; i ++) {
+    for (; i < 16; i++) {
         printf("   ");
     }
     printf("\t");
 
-    for (i = 0; i < len; i ++) {
+    for (i = 0; i < len; i++) {
         if (data[i] >= ' ' && data[i] < 128) {
             printf("%c", data[i]);
         } else {
@@ -26,9 +26,9 @@ static void show_line(const uint8_t *data, size_t len)
     printf("\n");
 }
 
-static void show_hex(const void *data, size_t len)
+static void show_hex(const void* data, size_t len)
 {
-    const uint8_t *t = (uint8_t*)data;
+    const uint8_t* t = (uint8_t*)data;
     while (len > 16) {
         show_line(t, 16);
         t += 16;
@@ -55,7 +55,5 @@ static void show_hex(const void *data, size_t len)
 
 //     close(fd);
 
-
 //     return 0;
 // }
-

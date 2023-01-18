@@ -2,13 +2,13 @@
 #if __APPLE__
 #include <TargetConditionals.h>
 #endif
-#include <freerdp/freerdp.h>
 #include <freerdp/client.h>
-
+#include <freerdp/freerdp.h>
 #include <freerdp/gdi/gdi.h>
+
 #include "showhex.c"
 
-FREERDP_LOCAL rdpChannels *freerdp_channels_new(freerdp *instance);
+FREERDP_LOCAL rdpChannels* freerdp_channels_new(freerdp* instance);
 
 static BOOL global_init(void)
 {
@@ -21,52 +21,45 @@ static void global_uninit(void)
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 }
 
-static BOOL client_new(freerdp *instance, rdpContext *context)
+static BOOL client_new(freerdp* instance, rdpContext* context)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
     return true;
 }
 
-static void client_free(freerdp *instance, rdpContext *context)
+static void client_free(freerdp* instance, rdpContext* context)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 }
 
-static int client_start(rdpContext *context)
+static int client_start(rdpContext* context)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    HANDLE handles[64] = {0};
+    HANDLE handles[64] = { 0 };
     DWORD waitStatus;
 
-    if (!freerdp_connect(context->instance))
-    {
+    if (!freerdp_connect(context->instance)) {
         printf("freerdp_connect return false\n");
         return 0;
     }
 
-    while (!freerdp_shall_disconnect(context->instance))
-    {
-
+    while (!freerdp_shall_disconnect(context->instance)) {
         DWORD r = freerdp_get_event_handles(context, handles, 64);
-        if (r == 0)
-        {
+        if (r == 0) {
             printf("freerdp_get_event_handles failed\n");
             break;
         }
-        // printf("[%s:%d] %s get event: %d\n", __FILE__, __LINE__, __FUNCTION__, r);
+        // printf("[%s:%d] %s get event: %d\n", __FILE__, __LINE__, __FUNCTION__,
+        // r);
 
-        if ((waitStatus = WaitForMultipleObjects(r, handles, FALSE, 250)) == WAIT_FAILED)
-        {
+        if ((waitStatus = WaitForMultipleObjects(r, handles, FALSE, 250)) == WAIT_FAILED) {
             printf("[%s:%d] %s, WaitForMultipleObjects: %d", __FILE__, __LINE__, __FUNCTION__, waitStatus);
             break;
-        }
-        else if (waitStatus == WAIT_TIMEOUT)
-        {
+        } else if (waitStatus == WAIT_TIMEOUT) {
             continue; // TODO: timeout, maybe break;
         }
 
-        if (!freerdp_check_event_handles(context))
-        {
+        if (!freerdp_check_event_handles(context)) {
             fprintf(stderr, "Failed to check FreeRDP file descriptor\n");
             break;
         }
@@ -74,15 +67,15 @@ static int client_start(rdpContext *context)
     return 0;
 }
 
-static int client_stop(rdpContext *context)
+static int client_stop(rdpContext* context)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
     return 0;
 }
 
-static BOOL pre_connect(freerdp *instance)
+static BOOL pre_connect(freerdp* instance)
 {
-    rdpSettings *settings = instance->settings;
+    rdpSettings* settings = instance->settings;
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
     settings->OsMajorType = OSMAJORTYPE_UNIX;
     settings->OsMinorType = OSMINORTYPE_NATIVE_XSERVER;
@@ -110,9 +103,9 @@ static BOOL pre_connect(freerdp *instance)
 
     // settings->OrderSupport[NEG_MEM3BLT_INDEX] = FALSE;
 
-    // settings->OrderSupport[NEG_MEMBLT_V2_INDEX] = settings->BitmapCacheEnabled;
-    // settings->OrderSupport[NEG_MEM3BLT_V2_INDEX] = FALSE;
-    // settings->OrderSupport[NEG_SAVEBITMAP_INDEX] = FALSE;
+    // settings->OrderSupport[NEG_MEMBLT_V2_INDEX] =
+    // settings->BitmapCacheEnabled; settings->OrderSupport[NEG_MEM3BLT_V2_INDEX]
+    // = FALSE; settings->OrderSupport[NEG_SAVEBITMAP_INDEX] = FALSE;
     // settings->OrderSupport[NEG_GLYPH_INDEX_INDEX] = TRUE;
     // settings->OrderSupport[NEG_FAST_INDEX_INDEX] = TRUE;
     // settings->OrderSupport[NEG_FAST_GLYPH_INDEX] = TRUE;
@@ -125,8 +118,7 @@ static BOOL pre_connect(freerdp *instance)
 
     settings->GlyphSupportLevel = GLYPH_SUPPORT_NONE;
 
-    if (instance->context->cache == NULL)
-    {
+    if (instance->context->cache == NULL) {
         instance->context->cache = cache_new(instance->settings);
     }
     printf("[%s:%d] %s [end]\n", __FILE__, __LINE__, __FUNCTION__);
@@ -134,23 +126,22 @@ static BOOL pre_connect(freerdp *instance)
     return true;
 }
 
-BOOL bitmap_new(rdpContext *context, rdpBitmap *bitmap)
+BOOL bitmap_new(rdpContext* context, rdpBitmap* bitmap)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 
     return true;
 }
 
-void bitmap_free(rdpContext *context, rdpBitmap *bitmap)
+void bitmap_free(rdpContext* context, rdpBitmap* bitmap)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 }
 
-BOOL bitmap_paint(rdpContext *context, rdpBitmap *bitmap)
+BOOL bitmap_paint(rdpContext* context, rdpBitmap* bitmap)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    if (bitmap->data != NULL)
-    {
+    if (bitmap->data != NULL) {
         int width = bitmap->right - bitmap->left + 1;
         int height = bitmap->bottom - bitmap->top + 1;
 
@@ -161,66 +152,63 @@ BOOL bitmap_paint(rdpContext *context, rdpBitmap *bitmap)
     return true;
 }
 
-BOOL bitmap_decompress(rdpContext *context, rdpBitmap *bitmap, const BYTE *data,
-                       UINT32 width, UINT32 height, UINT32 bpp, UINT32 length,
-                       BOOL compressed, UINT32 codec_id)
+BOOL bitmap_decompress(rdpContext* context, rdpBitmap* bitmap, const BYTE* data, UINT32 width, UINT32 height,
+    UINT32 bpp, UINT32 length, BOOL compressed, UINT32 codec_id)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
     return true;
 }
 
-BOOL bitmap_setsurface(rdpContext *context, rdpBitmap *bitmap, BOOL primary)
+BOOL bitmap_setsurface(rdpContext* context, rdpBitmap* bitmap, BOOL primary)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 
     return true;
 }
 
-BOOL glyph_new(rdpContext *context, const rdpGlyph *glyph)
+BOOL glyph_new(rdpContext* context, const rdpGlyph* glyph)
 {
     return true;
 }
-void glyph_free(rdpContext *context, rdpGlyph *glyph)
+void glyph_free(rdpContext* context, rdpGlyph* glyph)
 {
 }
-BOOL glyph_draw(rdpContext *context, const rdpGlyph *glyph, INT32 x, INT32 y,
-                INT32 w, INT32 h, INT32 sx, INT32 sy, BOOL fOpRedundant)
-{
-    return true;
-}
-BOOL glyph_begin_draw(rdpContext *context, INT32 x, INT32 y, INT32 width,
-                      INT32 height, UINT32 bgcolor, UINT32 fgcolor,
-                      BOOL fOpRedundant)
+BOOL glyph_draw(rdpContext* context, const rdpGlyph* glyph, INT32 x, INT32 y, INT32 w, INT32 h, INT32 sx, INT32 sy,
+    BOOL fOpRedundant)
 {
     return true;
 }
-BOOL glyph_end_draw(rdpContext *context, INT32 x, INT32 y, INT32 width, INT32 height,
-                    UINT32 bgcolor, UINT32 fgcolor)
+BOOL glyph_begin_draw(rdpContext* context, INT32 x, INT32 y, INT32 width, INT32 height, UINT32 bgcolor, UINT32 fgcolor,
+    BOOL fOpRedundant)
 {
     return true;
 }
-
-BOOL pointer_new(rdpContext *context, rdpPointer *pointer)
-{
-    return true;
-}
-void pointer_free(rdpContext *context, rdpPointer *pointer)
-{
-}
-BOOL pointer_set(rdpContext *context, const rdpPointer *pointer)
-{
-    return true;
-}
-BOOL pointer_set_null(rdpContext *context)
-{
-    return true;
-}
-BOOL pointer_set_default(rdpContext *context)
+BOOL glyph_end_draw(rdpContext* context, INT32 x, INT32 y, INT32 width, INT32 height, UINT32 bgcolor, UINT32 fgcolor)
 {
     return true;
 }
 
-static BOOL register_graphics(rdpGraphics *graphics)
+BOOL pointer_new(rdpContext* context, rdpPointer* pointer)
+{
+    return true;
+}
+void pointer_free(rdpContext* context, rdpPointer* pointer)
+{
+}
+BOOL pointer_set(rdpContext* context, const rdpPointer* pointer)
+{
+    return true;
+}
+BOOL pointer_set_null(rdpContext* context)
+{
+    return true;
+}
+BOOL pointer_set_default(rdpContext* context)
+{
+    return true;
+}
+
+static BOOL register_graphics(rdpGraphics* graphics)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 
@@ -256,13 +244,12 @@ static BOOL register_graphics(rdpGraphics *graphics)
     return TRUE;
 }
 
-BOOL update_begin_paint(rdpContext *context)
+BOOL update_begin_paint(rdpContext* context)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    rdpGdi *gdi = context->gdi;
+    rdpGdi* gdi = context->gdi;
 
-    if (gdi && gdi->primary && gdi->primary->hdc && gdi->primary->hdc->hwnd && gdi->primary->hdc->hwnd->invalid)
-    {
+    if (gdi && gdi->primary && gdi->primary->hdc && gdi->primary->hdc->hwnd && gdi->primary->hdc->hwnd->invalid) {
         printf("[%s:%d] %s, set gdi->primary->hdc->hwnd->invalid->null = TRUE\n", __FILE__, __LINE__, __FUNCTION__);
         gdi->primary->hdc->hwnd->invalid->null = TRUE;
     }
@@ -271,41 +258,40 @@ BOOL update_begin_paint(rdpContext *context)
 
     return true;
 }
-BOOL update_end_paint(rdpContext *context)
+BOOL update_end_paint(rdpContext* context)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 
     return TRUE;
 }
 
-BOOL update_play_sound(rdpContext *context, const PLAY_SOUND_UPDATE *play_sound)
+BOOL update_play_sound(rdpContext* context, const PLAY_SOUND_UPDATE* play_sound)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 
     return true;
 }
-BOOL update_set_keyboard_indicators(rdpContext *context, UINT16 led_flags)
-{
-    printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-
-    return true;
-}
-
-BOOL update_desktop_resize(rdpContext *context)
-{
-    printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-
-    return true;
-}
-BOOL update_set_keyboard_imestatus(rdpContext *context, UINT16 imeId, UINT32 imeState,
-                                   UINT32 imeConvMode)
+BOOL update_set_keyboard_indicators(rdpContext* context, UINT16 led_flags)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 
     return true;
 }
 
-static void register_update_callbacks(rdpUpdate *update)
+BOOL update_desktop_resize(rdpContext* context)
+{
+    printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+
+    return true;
+}
+BOOL update_set_keyboard_imestatus(rdpContext* context, UINT16 imeId, UINT32 imeState, UINT32 imeConvMode)
+{
+    printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+
+    return true;
+}
+
+static void register_update_callbacks(rdpUpdate* update)
 {
     update->BeginPaint = update_begin_paint;
     update->EndPaint = update_end_paint;
@@ -316,10 +302,9 @@ static void register_update_callbacks(rdpUpdate *update)
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
 }
 
-static BOOL post_connect(freerdp *instance)
+static BOOL post_connect(freerdp* instance)
 {
-    if (!gdi_init(instance, PIXEL_FORMAT_XRGB32))
-    {
+    if (!gdi_init(instance, PIXEL_FORMAT_XRGB32)) {
         return FALSE;
     }
     register_graphics(instance->context->graphics);
@@ -329,14 +314,13 @@ static BOOL post_connect(freerdp *instance)
     return true;
 }
 
-BOOL authenticate(freerdp *instance, char **username, char **password,
-                  char **domain)
+BOOL authenticate(freerdp* instance, char** username, char** password, char** domain)
 {
     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
     return true;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     RDP_CLIENT_ENTRY_POINTS ep;
     memset(&ep, 0, sizeof(ep));
@@ -351,8 +335,8 @@ int main(int argc, char **argv)
     ep.ClientStart = client_start;
     ep.ClientStop = client_stop;
 
-    rdpContext *ctx = freerdp_client_context_new(&ep);
-    rdpSettings *settings = ctx->instance->settings;
+    rdpContext* ctx = freerdp_client_context_new(&ep);
+    rdpSettings* settings = ctx->instance->settings;
 
     settings->ServerHostname = "10.226.239.200";
     settings->Username = "administrator";
