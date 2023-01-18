@@ -358,10 +358,3 @@ int main(int argc, char** argv)
     return 0;
 }
 
-//
-/*
-链路
-高可用
-
-堡垒机不能用的时候，预案
-*/
