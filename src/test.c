@@ -152,12 +152,12 @@ BOOL bitmap_paint(rdpContext* context, rdpBitmap* bitmap)
     return true;
 }
 
-BOOL bitmap_decompress(rdpContext* context, rdpBitmap* bitmap, const BYTE* data, UINT32 width, UINT32 height,
-    UINT32 bpp, UINT32 length, BOOL compressed, UINT32 codec_id)
-{
-    printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    return true;
-}
+// BOOL bitmap_decompress(rdpContext* context, rdpBitmap* bitmap, const BYTE* data, UINT32 width, UINT32 height,
+//     UINT32 bpp, UINT32 length, BOOL compressed, UINT32 codec_id)
+// {
+//     printf("[%s:%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+//     return true;
+// }
 
 BOOL bitmap_setsurface(rdpContext* context, rdpBitmap* bitmap, BOOL primary)
 {
@@ -166,47 +166,47 @@ BOOL bitmap_setsurface(rdpContext* context, rdpBitmap* bitmap, BOOL primary)
     return true;
 }
 
-BOOL glyph_new(rdpContext* context, const rdpGlyph* glyph)
-{
-    return true;
-}
-void glyph_free(rdpContext* context, rdpGlyph* glyph)
-{
-}
-BOOL glyph_draw(rdpContext* context, const rdpGlyph* glyph, INT32 x, INT32 y, INT32 w, INT32 h, INT32 sx, INT32 sy,
-    BOOL fOpRedundant)
-{
-    return true;
-}
-BOOL glyph_begin_draw(rdpContext* context, INT32 x, INT32 y, INT32 width, INT32 height, UINT32 bgcolor, UINT32 fgcolor,
-    BOOL fOpRedundant)
-{
-    return true;
-}
-BOOL glyph_end_draw(rdpContext* context, INT32 x, INT32 y, INT32 width, INT32 height, UINT32 bgcolor, UINT32 fgcolor)
-{
-    return true;
-}
+// BOOL glyph_new(rdpContext* context, const rdpGlyph* glyph)
+// {
+//     return true;
+// }
+// void glyph_free(rdpContext* context, rdpGlyph* glyph)
+// {
+// }
+// BOOL glyph_draw(rdpContext* context, const rdpGlyph* glyph, INT32 x, INT32 y, INT32 w, INT32 h, INT32 sx, INT32 sy,
+//     BOOL fOpRedundant)
+// {
+//     return true;
+// }
+// BOOL glyph_begin_draw(rdpContext* context, INT32 x, INT32 y, INT32 width, INT32 height, UINT32 bgcolor, UINT32 fgcolor,
+//     BOOL fOpRedundant)
+// {
+//     return true;
+// }
+// BOOL glyph_end_draw(rdpContext* context, INT32 x, INT32 y, INT32 width, INT32 height, UINT32 bgcolor, UINT32 fgcolor)
+// {
+//     return true;
+// }
 
-BOOL pointer_new(rdpContext* context, rdpPointer* pointer)
-{
-    return true;
-}
-void pointer_free(rdpContext* context, rdpPointer* pointer)
-{
-}
-BOOL pointer_set(rdpContext* context, const rdpPointer* pointer)
-{
-    return true;
-}
-BOOL pointer_set_null(rdpContext* context)
-{
-    return true;
-}
-BOOL pointer_set_default(rdpContext* context)
-{
-    return true;
-}
+// BOOL pointer_new(rdpContext* context, rdpPointer* pointer)
+// {
+//     return true;
+// }
+// void pointer_free(rdpContext* context, rdpPointer* pointer)
+// {
+// }
+// BOOL pointer_set(rdpContext* context, const rdpPointer* pointer)
+// {
+//     return true;
+// }
+// BOOL pointer_set_null(rdpContext* context)
+// {
+//     return true;
+// }
+// BOOL pointer_set_default(rdpContext* context)
+// {
+//     return true;
+// }
 
 static BOOL register_graphics(rdpGraphics* graphics)
 {
@@ -223,23 +223,23 @@ static BOOL register_graphics(rdpGraphics* graphics)
     graphics_register_bitmap(graphics, &bitmap);
     printf("[%s:%d] %s [bitmap]\n", __FILE__, __LINE__, __FUNCTION__);
 
-    rdpGlyph glyph = *graphics->Glyph_Prototype;
-    glyph.size = sizeof(rdpGlyph);
-    glyph.New = glyph_new;
-    glyph.Free = glyph_free;
-    glyph.Draw = glyph_draw;
-    glyph.BeginDraw = glyph_begin_draw;
-    glyph.EndDraw = glyph_end_draw;
-    graphics_register_glyph(graphics, &glyph);
+    // rdpGlyph glyph = *graphics->Glyph_Prototype;
+    // glyph.size = sizeof(rdpGlyph);
+    // glyph.New = glyph_new;
+    // glyph.Free = glyph_free;
+    // glyph.Draw = glyph_draw;
+    // glyph.BeginDraw = glyph_begin_draw;
+    // glyph.EndDraw = glyph_end_draw;
+    // graphics_register_glyph(graphics, &glyph);
 
-    rdpPointer pointer = *graphics->Pointer_Prototype;
-    pointer.size = sizeof(rdpPointer);
-    pointer.New = pointer_new;
-    pointer.Free = pointer_free;
-    pointer.Set = pointer_set;
-    pointer.SetNull = pointer_set_null;
-    pointer.SetDefault = pointer_set_default;
-    graphics_register_pointer(graphics, &pointer);
+    // rdpPointer pointer = *graphics->Pointer_Prototype;
+    // pointer.size = sizeof(rdpPointer);
+    // pointer.New = pointer_new;
+    // pointer.Free = pointer_free;
+    // pointer.Set = pointer_set;
+    // pointer.SetNull = pointer_set_null;
+    // pointer.SetDefault = pointer_set_default;
+    // graphics_register_pointer(graphics, &pointer);
 
     return TRUE;
 }
